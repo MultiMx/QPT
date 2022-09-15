@@ -24,6 +24,9 @@ func Run() {
 		f = func() {
 			fmt.Println(global.VERSION)
 		}
+	case "config":
+		length = 4
+		f = configure
 	default:
 		log.Fatalf("命令 %s 不存在\n", os.Args[1])
 	}
