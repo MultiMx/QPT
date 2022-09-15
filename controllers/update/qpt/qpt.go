@@ -16,11 +16,7 @@ const owner = "MultiMx"
 const repo = "QPT"
 
 func GetLatestVersion() (string, error) {
-	release, e := github.GetLatestRelease(owner, repo)
-	if e != nil {
-		return "", e
-	}
-	return *release.TagName, nil
+	return github.GetLatestRelease(owner, repo)
 }
 
 func Download(v string) (string, error) {
