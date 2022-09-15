@@ -51,7 +51,7 @@ func Install(file string) error {
 func MakeUpdate() {
 	v, e := GetLatestVersion()
 	if e != nil {
-		log.Errorln("获取最新版信息失败")
+		log.Errorln("获取最新版信息失败：", e)
 		return
 	}
 
