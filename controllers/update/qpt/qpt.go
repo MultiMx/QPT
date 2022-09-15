@@ -43,7 +43,11 @@ func Install(file string) error {
 	if e != nil {
 		return e
 	}
-	_, e = exec.Command("mv", file, os.Args[0]).Output()
+	path, e := os.Executable()
+	if e != nil {
+		return e
+	}
+	_, e = exec.Command("mv", file, path).Output()
 	return e
 }
 
