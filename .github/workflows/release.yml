@@ -29,9 +29,9 @@ jobs:
           GOOS: 'linux'
           GOARCH: 'amd64'
         run: |
-          go build --ldflags="-extldflags "-static" -X github.com/MultiMx/QPT/global.VERSION='${{ steps.get_version.outputs.VERSION }}' -X github.com/MultiMx/QPT/modules/github.AccessToken='${{ secrets.GITHUB_ACCESS_KEY }}' -s -w" -o qpt_linux_amd64
+          go build --ldflags="-extldflags "-static" -X github.com/MultiMx/QPT/global.VERSION='${{ steps.get_version.outputs.VERSION }}' -X github.com/MultiMx/QPT/modules/github.AccessToken='${{ secrets.GH_ACCESS_KEY }}' -s -w" -o qpt_linux_amd64
           export GOARCH=arm64
-          go build --ldflags="-extldflags "-static" -X github.com/MultiMx/QPT/global.VERSION='${{ steps.get_version.outputs.VERSION }}' -X github.com/MultiMx/QPT/modules/github.AccessToken='${{ secrets.GITHUB_ACCESS_KEY }}' -s -w" -o qpt_linux_arm64
+          go build --ldflags="-extldflags "-static" -X github.com/MultiMx/QPT/global.VERSION='${{ steps.get_version.outputs.VERSION }}' -X github.com/MultiMx/QPT/modules/github.AccessToken='${{ secrets.GH_ACCESS_KEY }}' -s -w" -o qpt_linux_arm64
 
       - name: Run UPX
         uses: crazy-max/ghaction-upx@v2
