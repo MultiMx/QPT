@@ -24,8 +24,7 @@ func GetLatestVersion() (string, error) {
 }
 
 func Download(v string) (string, error) {
-	spin := util.Spinner()
-	spin.Suffix = "正在下载"
+	spin := util.Spinner("正在下载")
 	spin.Start()
 	defer spin.Stop()
 

@@ -43,8 +43,7 @@ func GetLatestVersion() (string, error) {
 }
 
 func Download(v string) (string, error) {
-	spin := util.Spinner()
-	spin.Suffix = "正在下载"
+	spin := util.Spinner("正在下载")
 	spin.Start()
 	defer spin.Stop()
 
@@ -58,8 +57,7 @@ func Download(v string) (string, error) {
 }
 
 func InstallFiles(file string) error {
-	spin := util.Spinner()
-	spin.Suffix = "正在解压"
+	spin := util.Spinner("正在解压")
 	spin.Start()
 	defer spin.Stop()
 
