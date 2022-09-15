@@ -43,17 +43,12 @@ func GetLatestVersion() (string, error) {
 	return version, nil
 }
 
-func Download(v string) (io.ReadCloser, error) {
-	res, e := util.Http.GetRequest(&tool.DoHttpReq{
-		Url: fmt.Sprintf("https://go.dev/dl/%s.%s-%s.tar.gz", v, runtime.GOOS, runtime.GOARCH),
-	})
-	if e != nil {
-		return nil, e
-	}
-	return res.Body, nil
-}
-
 func SaveTmpPack(i io.ReadCloser) (string, error) {
+	spin := util.Spinner()
+	spin.Suffix = "正在下载"
+	spin.Start()
+	defer spin.Stop()
+
 	defer i.Close()
 
 	file, e := os.CreateTemp("", "go-install-*****.tar.gz")
@@ -66,30 +61,61 @@ func SaveTmpPack(i io.ReadCloser) (string, error) {
 	return file.Name(), e
 }
 
-func InstallFiles(file string) error {
-	e := exec.Command("tar", "-C", "/usr/local", "-xzf", file).Wait()
+func Download(v string) (string, error) {
+	res, e := util.Http.GetRequest(&tool.DoHttpReq{
+		Url: fmt.Sprintf("https://go.dev/dl/%s.%s-%s.tar.gz", v, runtime.GOOS, runtime.GOARCH),
+	})
 	if e != nil {
-		return e
+		return "", e
 	}
+	return SaveTmpPack(res.Body)
+}
+
+func InstallFiles(file string) error {
+	spin := util.Spinner()
+	spin.Suffix = "正在解压"
+	spin.Start()
+	defer spin.Stop()
+
+	_, e := exec.Command("tar", "-C", "/usr/local", "-xzf", file).Output()
+	return e
+}
+
+func LinkFiles() error {
 	return os.Symlink("/usr/local/go/bin/*", "/bin/")
 }
 
-func Install() error {
-	v, e := GetLatestVersion()
-	if e != nil {
-		log.Errorln("获取最新版本失败")
-		return e
-	}
-	res, e := Download(v)
+func Install(v string) error {
+	file, e := Download(v)
 	if e != nil {
 		log.Errorln("下载最新版本失败")
 		return e
 	}
-	file, e := SaveTmpPack(res)
+	defer os.Remove(file)
+	log.Infoln("安装包下载完毕")
+
+	e = InstallFiles(file)
 	if e != nil {
 		return e
 	}
-	defer os.Remove(file)
+	return LinkFiles()
+}
 
-	return InstallFiles(file)
+func MakeInstall() {
+	vl, e := GetLocalVersion()
+	if e == nil {
+		log.Errorf("本地已存在 golang %s\n", vl)
+		return
+	}
+	v, e := GetLatestVersion()
+	if e != nil {
+		log.Errorln("获取最新版本失败")
+		return
+	}
+
+	log.Infoln("开始安装 ", v)
+
+	if e = Install(v); e != nil {
+		log.Errorln("安装异常退出：", e)
+	}
 }
