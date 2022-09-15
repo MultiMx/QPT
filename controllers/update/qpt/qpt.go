@@ -29,8 +29,7 @@ func Download(v string) (string, error) {
 	spin.Start()
 	defer spin.Stop()
 
-	http := tool.NewHttpTool(github.Client.Client())
-	res, e := http.GetRequest(&tool.DoHttpReq{
+	res, e := util.Http.GetRequest(&tool.DoHttpReq{
 		Url: fmt.Sprintf("https://github.com/%s/%s/releases/download/%s/qpt_%s_%s", owner, repo, v, runtime.GOOS, runtime.GOARCH),
 	})
 	if e != nil {
