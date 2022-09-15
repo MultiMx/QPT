@@ -78,11 +78,7 @@ func Install(v string) error {
 	defer os.Remove(file)
 	log.Infoln("安装包下载完毕")
 
-	e = InstallFiles(file)
-	if e != nil {
-		return e
-	}
-	return LinkFiles()
+	return InstallFiles(file)
 }
 
 func MakeInstall() {
@@ -101,5 +97,11 @@ func MakeInstall() {
 
 	if e = Install(v); e != nil {
 		log.Errorln("安装异常退出：", e)
+		return
+	}
+
+	if e = LinkFiles(); e != nil {
+		log.Errorln("创建软链接失败：", e)
+		return
 	}
 }
