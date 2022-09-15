@@ -25,4 +25,6 @@ func MakeUpdate() {
 	if e = golang.Install(v); e != nil {
 		log.Errorln("升级异常退出：", e)
 	}
+
+	log.Infoln("已升级至 ", v)
 }

@@ -72,4 +72,6 @@ func MakeUpdate() {
 		log.Errorln("安装失败：", e)
 		return
 	}
+
+	log.Infoln("已升级至 QPT ", v)
 }

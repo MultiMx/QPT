@@ -104,4 +104,6 @@ func MakeInstall() {
 		log.Errorln("创建软链接失败：", e)
 		return
 	}
+
+	log.Println("已安装 golang ", v)
 }
