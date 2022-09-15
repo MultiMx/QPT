@@ -7,7 +7,6 @@ import (
 	"github.com/MultiMx/QPT/util"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
-	"io"
 	"os"
 	"os/exec"
 	"runtime"
@@ -43,32 +42,19 @@ func GetLatestVersion() (string, error) {
 	return version, nil
 }
 
-func SaveTmpPack(i io.ReadCloser) (string, error) {
+func Download(v string) (string, error) {
 	spin := util.Spinner()
 	spin.Suffix = "正在下载"
 	spin.Start()
 	defer spin.Stop()
 
-	defer i.Close()
-
-	file, e := os.CreateTemp("", "go-install-*****.tar.gz")
-	if e != nil {
-		return "", e
-	}
-	defer file.Close()
-
-	_, e = io.Copy(file, i)
-	return file.Name(), e
-}
-
-func Download(v string) (string, error) {
 	res, e := util.Http.GetRequest(&tool.DoHttpReq{
 		Url: fmt.Sprintf("https://go.dev/dl/%s.%s-%s.tar.gz", v, runtime.GOOS, runtime.GOARCH),
 	})
 	if e != nil {
 		return "", e
 	}
-	return SaveTmpPack(res.Body)
+	return util.SaveTmpPack(res.Body)
 }
 
 func InstallFiles(file string) error {
@@ -109,7 +95,7 @@ func MakeInstall() {
 	}
 	v, e := GetLatestVersion()
 	if e != nil {
-		log.Errorln("获取最新版本失败")
+		log.Errorln("获取最新版本失败：", e)
 		return
 	}
 
