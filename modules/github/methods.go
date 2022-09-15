@@ -1,11 +1,17 @@
 package github
 
 import (
-	"context"
-	"github.com/google/go-github/v47/github"
+	"fmt"
+	"github.com/Mmx233/tool"
+	"github.com/MultiMx/QPT/util"
 )
 
-func GetLatestRelease(owner, repo string) (*github.RepositoryRelease, error) {
-	t, _, e := Client.Repositories.GetLatestRelease(context.Background(), owner, repo)
-	return t, e
+func GetLatestRelease(owner, repo string) (string, error) {
+	_, res, e := util.Http.Get(&tool.DoHttpReq{
+		Url: fmt.Sprintf("https://api.github.com/repos/%s/%s/releases/latest", owner, repo),
+	})
+	if e != nil {
+		return "", e
+	}
+	return res["tag_name"].(string), e
 }
