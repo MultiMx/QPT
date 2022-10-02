@@ -47,7 +47,7 @@ func Download(v string) (string, error) {
 	spin.Start()
 	defer spin.Stop()
 
-	res, e := util.Http.GetRequest(&tool.DoHttpReq{
+	res, e := util.HttpDownload.GetRequest(&tool.DoHttpReq{
 		Url: fmt.Sprintf("https://go.dev/dl/%s.%s-%s.tar.gz", v, runtime.GOOS, runtime.GOARCH),
 	})
 	if e != nil {
