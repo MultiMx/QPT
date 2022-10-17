@@ -8,12 +8,13 @@ import (
 func MakeUpdate() {
 	vl, e := golang.GetLocalVersion()
 	if e != nil {
-		log.Errorln("获取本地 golang 版本失败")
+		log.Errorln("获取本地 golang 版本失败：", e)
 		return
 	}
 	v, e := golang.GetLatestVersion()
 	if e != nil {
-		log.Errorln("获取最新版本失败")
+		log.Errorln("获取最新版本失败：", e)
+		return
 	}
 
 	if v == vl {
