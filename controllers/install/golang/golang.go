@@ -66,7 +66,7 @@ func InstallFiles(file string) error {
 }
 
 func LinkFiles() error {
-	return exec.Command("ln", "-s", "/usr/local/go/bin/*", "/bin/").Wait()
+	return exec.Command("ln", "-s", "/usr/local/go/bin/*", "/bin/").Run()
 }
 
 func Install(v string) error {
