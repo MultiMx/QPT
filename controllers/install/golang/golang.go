@@ -66,7 +66,7 @@ func InstallFiles(file string) error {
 }
 
 func LinkFiles() error {
-	return os.Symlink("/usr/local/go/bin/*", "/bin/")
+	return exec.Command("ln", "-s", "/usr/local/go/bin/*", "/bin/").Run()
 }
 
 func Install(v string) error {
